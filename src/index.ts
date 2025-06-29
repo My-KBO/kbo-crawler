@@ -1,6 +1,9 @@
+import { fetchTopPlayers } from "./rankings/playerRankingCrawler";
 import { fetchTeamRanking } from "./rankings/teamRankingCrawler";
 
 (async () => {
-  const result = await fetchTeamRanking();
-  console.table(result);
+  const teamresult = await fetchTeamRanking();
+  const playerresult = await fetchTopPlayers();
+  console.table(teamresult);
+  console.table(playerresult);
 })();
