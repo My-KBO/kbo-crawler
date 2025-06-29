@@ -4,11 +4,13 @@ export async function fetchTeamRanking() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  await page.goto("https://www.koreabaseball.com/TeamRank/TeamRank.aspx", {
-    waitUntil: "domcontentloaded",
-  });
+  await page.goto(
+    "https://www.koreabaseball.com/Record/TeamRank/TeamRankDaily.aspx",
+    {
+      waitUntil: "domcontentloaded",
+    }
+  );
 
-  // 테이블이 완전히 렌더링되었는지 대기 요
   await page.waitForSelector(
     "#cphContents_cphContents_cphContents_udpRecord table"
   );
