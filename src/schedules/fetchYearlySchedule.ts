@@ -7,32 +7,53 @@ export async function fetchMonthlySchedule(year: number, month: number) {
   const url = `https://www.koreabaseball.com/Schedule/Schedule.aspx`;
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
-  // 1. 년도 선택
   await page.selectOption("#ddlYear", String(year));
   await page.waitForTimeout(1000);
+  await page.selectOption("#ddlMonth", String(month).padStart(2, "0"));
+  await page.waitForTimeout(2000);
 
-  // 2. 월 선택 (월은 0 패딩 필요)
-  const paddedMonth = month.toString().padStart(2, "0");
-  await page.selectOption("#ddlMonth", paddedMonth);
-  await page.waitForTimeout(2000); // 렌더링 여유 시간
-
-  // 3. 경기 목록 추출
   const schedules = await page.$$eval("table.tbl > tbody > tr", (rows) => {
-    const result = [];
+    const result: {
+      date: string;
+      time: string;
+      game: string;
+      tv: string;
+      stadium: string;
+      note: string;
+    }[] = [];
+
+    let currentDate = "";
 
     for (const row of rows) {
-      const tds = Array.from(row.querySelectorAll("td")).map(
-        (el) => el.textContent?.trim() || ""
-      );
+      const tds = Array.from(row.querySelectorAll("td"));
 
-      result.push({
-        date: tds[0],
-        time: tds[1],
-        game: tds[2],
-        tv: tds[5],
-        stadium: tds[7],
-        note: tds[8],
-      });
+      let date = "",
+        time = "",
+        game = "",
+        tv = "",
+        stadium = "",
+        note = "";
+
+      if (tds.length === 9) {
+        // 날짜 포함된 행
+        date = tds[0]?.textContent?.trim() || "";
+        currentDate = date;
+        time = tds[1]?.textContent?.trim() || "";
+        game = tds[2]?.textContent?.trim() || "";
+        tv = tds[5]?.textContent?.trim() || "";
+        stadium = tds[7]?.textContent?.trim() || "";
+        note = tds[8]?.textContent?.trim() || "";
+      } else if (tds.length === 8) {
+        // 날짜 없이 이어지는 경기
+        date = currentDate;
+        time = tds[0]?.textContent?.trim() || "";
+        game = tds[1]?.textContent?.trim() || "";
+        tv = tds[4]?.textContent?.trim() || "";
+        stadium = tds[6]?.textContent?.trim() || "";
+        note = tds[7]?.textContent?.trim() || "";
+      }
+
+      result.push({ date, time, game, tv, stadium, note });
     }
 
     return result;

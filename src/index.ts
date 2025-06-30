@@ -9,9 +9,6 @@ import { fetchMonthlySchedule } from "./schedules/fetchYearlySchedule";
   // console.table(playerresult);
   const year = 2025;
 
-  for (let month = 3; month <= 12; month++) {
-    const data = await fetchMonthlySchedule(year, month);
-    console.log(`[${year}-${month}] 경기 수: ${data.length}`);
-    console.table(data.slice(0, 3)); // 샘플 출력
-  }
+  const data = await fetchMonthlySchedule(year, 6);
+  console.table(data.slice(0, 10)); // 샘플 출력
 })();
