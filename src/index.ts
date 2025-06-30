@@ -1,14 +1,28 @@
 import { fetchTopPlayers } from "./rankings/playerRankingCrawler";
 import { fetchTeamRanking } from "./rankings/teamRankingCrawler";
 import { fetchMonthlySchedule } from "./schedules/fetchYearlySchedule";
+import { saveToDatabase } from "./prisma/saveMainDate";
 
 (async () => {
-  // const teamresult = await fetchTeamRanking();
-  // const playerresult = await fetchTopPlayers().then();
-  // console.table(teamresult);
-  // console.table(playerresult);
   const year = 2025;
 
-  const data = await fetchMonthlySchedule(year, 7);
-  console.table(data.slice(0, 10));
+  const teamresult = await fetchTeamRanking();
+  const playerresult = await fetchTopPlayers();
+  console.table(teamresult);
+  console.table(playerresult);
+
+  let allSchedules: any[] = [];
+  for (let month = 3; month <= 12; month++) {
+    const monthly = await fetchMonthlySchedule(year, month);
+    console.log(`${month}월 일정 ${monthly.length}건`);
+    allSchedules.push(...monthly);
+  }
+
+  console.table(allSchedules.slice(0, 10));
+
+  await saveToDatabase({
+    schedules: allSchedules,
+    teamRanks: teamresult,
+    playerStats: playerresult,
+  });
 })();
