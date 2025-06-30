@@ -9,6 +9,6 @@ import { fetchMonthlySchedule } from "./schedules/fetchYearlySchedule";
   // console.table(playerresult);
   const year = 2025;
 
-  const data = await fetchMonthlySchedule(year, 6);
-  console.table(data.slice(0, 10)); // 샘플 출력
+  const data = await fetchMonthlySchedule(year, 7);
+  console.table(data.slice(0, 10));
 })();
