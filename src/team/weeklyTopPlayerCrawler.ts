@@ -21,7 +21,7 @@ function parseInning(ipText: string): number {
 }
 
 export async function getUnifiedTopStats(): Promise<StatRow[]> {
-  const browser = await chromium.launch({ headless: false });
+  const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
   const result: StatRow[] = [];
