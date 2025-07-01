@@ -6,10 +6,18 @@ export async function saveToDatabase({
   schedules,
   teamRanks,
   playerStats,
+  teamTopPlayers, // ✅ 추가
 }: {
   schedules: any[];
   teamRanks: any[];
   playerStats: any[];
+  teamTopPlayers: {
+    team: string;
+    name: string;
+    type: "타자" | "투수";
+    game: number;
+    value: number;
+  }[];
 }) {
   for (const s of schedules) {
     await prisma.schedule.upsert({
@@ -51,6 +59,23 @@ export async function saveToDatabase({
         },
       },
       update: { value: p.value },
+      create: p,
+    });
+  }
+
+  for (const p of teamTopPlayers) {
+    await prisma.teamTopPlayer.upsert({
+      where: {
+        team_name_type: {
+          team: p.team,
+          name: p.name,
+          type: p.type,
+        },
+      },
+      update: {
+        game: p.game,
+        value: p.value,
+      },
       create: p,
     });
   }
