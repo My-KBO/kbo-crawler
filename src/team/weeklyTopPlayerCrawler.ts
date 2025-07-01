@@ -20,13 +20,12 @@ function parseInning(ipText: string): number {
   return fullInning + fraction;
 }
 
-async function getUnifiedTopStats(): Promise<StatRow[]> {
+export async function getUnifiedTopStats(): Promise<StatRow[]> {
   const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
 
   const result: StatRow[] = [];
 
-  // 1. 타자
   await page.goto(
     "https://www.koreabaseball.com/Record/Player/HitterBasic/Basic1.aspx",
     {
@@ -69,7 +68,6 @@ async function getUnifiedTopStats(): Promise<StatRow[]> {
 
   result.push(...Array.from(topHittersByTeam.values()));
 
-  // 2. 투수
   await page.goto(
     "https://www.koreabaseball.com/Record/Player/PitcherBasic/Basic1.aspx",
     {
@@ -119,6 +117,5 @@ async function getUnifiedTopStats(): Promise<StatRow[]> {
 
 (async () => {
   const stats = await getUnifiedTopStats();
-  console.log("📊 통합 선수별 주요 기록 (타자 + 투수)");
   console.table(stats);
 })();

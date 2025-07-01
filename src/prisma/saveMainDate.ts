@@ -6,7 +6,7 @@ export async function saveToDatabase({
   schedules,
   teamRanks,
   playerStats,
-  teamTopPlayers, // ✅ 추가
+  teamTopPlayers,
 }: {
   schedules: any[];
   teamRanks: any[];
