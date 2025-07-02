@@ -35,7 +35,7 @@ export async function fetchTeamRanking() {
             draw: parseInt(cols[5]),
             winRate: parseFloat(cols[6]),
             gameGap: cols[7],
-            streak: cols[8],
+            streak: cols[9],
           };
         })
         .filter((item) => item !== null);
