@@ -100,10 +100,10 @@ export async function fetchMonthlySchedule(year: number, month: number) {
 
   const finalData = rawData.map(({ date, time, game, tv, stadium, note }) => {
     const parsed = parseGame(game);
-    const dateISO = convertToISODate(month, date);
+    date = convertToISODate(month, date);
 
     return {
-      dateISO,
+      date,
       time,
       homeTeam: parsed?.homeTeam || "",
       homeScore: parsed?.homeScore || "",
