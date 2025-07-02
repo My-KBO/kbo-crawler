@@ -12,10 +12,10 @@ function parseGame(game: string) {
 
   if (leftMatch && rightMatch) {
     return {
-      homeTeam: leftMatch[1],
-      homeScore: leftMatch[2],
-      awayScore: rightMatch[1],
-      awayTeam: rightMatch[2],
+      homeTeam: rightMatch[1],
+      homeScore: rightMatch[2],
+      awayScore: leftMatch[1],
+      awayTeam: leftMatch[2],
     };
   }
 
