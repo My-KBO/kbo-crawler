@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "update": "ts-node src/updateKboData.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "npx prisma generate --schema=../server/prisma/schema.prisma"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -27,10 +26,11 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@prisma/client": "^6.10.1",
+    "@prisma/client": "^6.11.0",
     "axios": "^1.10.0",
     "cheerio": "^1.1.0",
     "dotenv": "^17.0.0",
-    "playwright": "^1.53.1"
+    "playwright": "^1.53.1",
+    "prisma": "^6.11.0"
   }
 }

@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  password       String
+  nickname       String
+  favoriteTeam   String?  @map("favorite_team")
+  createdAt      DateTime @default(now()) @map("created_at")
+  refreshToken String?  @map("refresh_token")
+
+  posts          Post[]
+  comments       Comment[]
+  postLikes      PostLike[]
+  commentLikes   CommentLike[]
+}
+
+enum PostCategory {
+  GENERAL   
+  FREE        
+  LG
+  KIA
+  SSG
+  NC
+  DOOSAN
+  LOTTE
+  SAMSUNG
+  HANHWA
+  KT
+  KIWOOM
+}
+
+
+model Post {
+  id          Int           @id @default(autoincrement())
+  userId      String        @map("user_id")
+  title       String
+  content     String
+  views         Int           @default(0)
+  category    PostCategory  @default(GENERAL)
+  likesCount  Int           @default(0) @map("likes_count")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt      @map("updated_at")
+
+  user        User          @relation(fields: [userId], references: [id])
+  comments    Comment[]
+  likes       PostLike[]
+}
+
+model Comment {
+  id           Int       @id @default(autoincrement())
+  postId       Int       @map("post_id")
+  userId       String    @map("user_id")
+  content      String
+  likesCount   Int       @default(0) @map("likes_count")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  post         Post      @relation(fields: [postId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+  likes        CommentLike[]
+}
+
+model PostLike {
+  id           Int       @id @default(autoincrement())
+  postId       Int       @map("post_id")
+  userId       String    @map("user_id")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  post         Post      @relation(fields: [postId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+}
+
+model CommentLike {
+  id         Int      @id @default(autoincrement())
+  commentId  Int      @map("comment_id")
+  userId     String   @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  comment    Comment  @relation(fields: [commentId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, commentId], name: "userId_commentId")
+}
+
+model Schedule {
+  id         Int     @id @default(autoincrement())
+  date       String
+  time       String
+  homeTeam   String
+  homeScore  String
+  awayTeam   String
+  awayScore  String
+  tv         String
+  stadium    String
+  note       String
+
+  @@unique([date, time, stadium])
+}
+
+model TeamRank {
+  id        Int     @id @default(autoincrement())
+  rank      Int
+  team      String  @unique
+  games     Int
+  win       Int
+  lose      Int
+  draw      Int
+  winRate   Float
+  gameGap   String
+  streak    String
+}
+
+model PlayerStat {
+  id       Int     @id @default(autoincrement())
+  category String
+  name     String
+  team     String
+  value    String
+
+  @@unique([category, name, team])
+}
+
+model TeamTopPlayer {
+  id     Int     @id @default(autoincrement())
+  team   String
+  name   String
+  type   String   
+  game   Float     
+  value  Float     
+
+  @@unique([team, name, type])
+}
