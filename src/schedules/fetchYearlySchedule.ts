@@ -1,5 +1,17 @@
 import { chromium } from "playwright";
 
+function convertToISODate(month: number, rawDate: string): string {
+  const match = rawDate.match(/^(\d{2})\.(\d{2})/);
+  if (!match) return "";
+
+  const [, mm, dd] = match;
+  const paddedMonth = String(month).padStart(2, "0");
+  const day = dd.padStart(2, "0");
+  const year = new Date().getFullYear();
+
+  return `${year}-${paddedMonth}-${day}`;
+}
+
 function parseGame(game: string) {
   const parts = game.split("vs");
   if (parts.length !== 2) return null;
@@ -48,7 +60,6 @@ export async function fetchMonthlySchedule(year: number, month: number) {
 
   const rawData = await page.$$eval("table.tbl > tbody > tr", (rows) => {
     const results = [];
-
     let currentDate = "";
 
     for (const row of rows) {
@@ -89,12 +100,10 @@ export async function fetchMonthlySchedule(year: number, month: number) {
 
   const finalData = rawData.map(({ date, time, game, tv, stadium, note }) => {
     const parsed = parseGame(game);
-    if (!parsed) {
-      console.log("parseGame 실패:", game);
-    }
+    const dateISO = convertToISODate(month, date);
 
     return {
-      date,
+      dateISO,
       time,
       homeTeam: parsed?.homeTeam || "",
       homeScore: parsed?.homeScore || "",
