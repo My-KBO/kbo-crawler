@@ -34,8 +34,12 @@ jobs:
       - name: Install dependencies & build on EC2
         run: |
           ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/mykbo-crawler
-            npm ci
-            npx prisma generate
-            npx tsc
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use --lts
+
+          cd /home/ubuntu/mykbo-crawler
+          npm ci
+          npx prisma generate
+          npx tsc
           EOF
