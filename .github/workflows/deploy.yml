@@ -2,14 +2,15 @@ name: Deploy Crawler to EC2
 
 on:
   push:
-    branches: [dev]
+    branches:
+      - dev
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v3
 
       - name: Add SSH private key
@@ -30,14 +31,11 @@ jobs:
         run: |
           rsync -avz -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/mykbo-crawler
 
-      - name: Install & Build on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ~/.ssh/id_rsa
-          script: |
-            cd ~/mykbo-crawler
+      - name: Install dependencies & build on EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /home/ubuntu/mykbo-crawler
             npm ci
             npx prisma generate
             npx tsc
+          EOF
