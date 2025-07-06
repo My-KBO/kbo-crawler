@@ -5,7 +5,7 @@ import { saveToDatabase } from "./prisma/saveMainDate";
 import { getUnifiedTopStats } from "./team/weeklyTopPlayerCrawler";
 
 (async () => {
-  const year = 2025;
+  const year = new Date().getFullYear();
   const month = new Date().getMonth() + 1;
 
   const schedule = await fetchMonthlySchedule(year, month);
