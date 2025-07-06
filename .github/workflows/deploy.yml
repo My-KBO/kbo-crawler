@@ -14,7 +14,7 @@ jobs:
 
       - name: Decode base64 SSH Key
         run: |
-          echo "${{ secrets.EC2_KEY }}" | base64 -d > deploy_key.pem
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > deploy_key.pem || printf '%s' "${{ secrets.EC2_KEY }}" | base64 -d > deploy_key.pem
           chmod 600 deploy_key.pem
 
       - name: Copy files to EC2
