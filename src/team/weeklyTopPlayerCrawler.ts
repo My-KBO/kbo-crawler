@@ -4,8 +4,8 @@ type StatRow = {
   team: string;
   name: string;
   type: "타자" | "투수";
-  game: number; // PA or IP
-  value: number; // AVG or ERA
+  game: number;
+  value: number;
 };
 
 function parseInning(ipText: string): number {
