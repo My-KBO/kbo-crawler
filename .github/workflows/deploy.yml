@@ -27,21 +27,15 @@ jobs:
           echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Copy files to EC2
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: deploy_key.pem
-          source: "."
-          target: "~/mykbo-crawler"
-          strip_components: 0
+        run: |
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa" ./ ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/mykbo-crawler
 
       - name: Install & Build on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: deploy_key.pem
+          key: ~/.ssh/id_rsa
           script: |
             cd ~/mykbo-crawler
             npm ci
