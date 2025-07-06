@@ -2,31 +2,37 @@ name: Deploy Crawler to EC2
 
 on:
   push:
-    branches: [dev]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy files to EC2 via SSH
+      - name: Decode base64 SSH Key
+        run: |
+          echo "${{ secrets.EC2_KEY }}" | base64 -d > deploy_key.pem
+          chmod 600 deploy_key.pem
+
+      - name: Copy files to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          key: deploy_key.pem
           source: "."
           target: "~/mykbo-crawler"
+          strip_components: 0
 
-      - name: Install dependencies & Build
+      - name: Install & Build on EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          key: deploy_key.pem
           script: |
             cd ~/mykbo-crawler
             npm ci
