@@ -33,7 +33,6 @@ export async function saveToDatabase({
         homeScore: s.homeScore,
         awayTeam: s.awayTeam,
         awayScore: s.awayScore,
-        tv: s.tv,
         stadium: s.stadium,
         note: s.note,
       },

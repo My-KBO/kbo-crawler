@@ -97,7 +97,6 @@ model Schedule {
   homeScore  String
   awayTeam   String
   awayScore  String
-  tv         String
   stadium    String
   note       String
 

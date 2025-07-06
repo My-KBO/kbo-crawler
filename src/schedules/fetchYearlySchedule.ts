@@ -69,7 +69,6 @@ export async function fetchMonthlySchedule(year: number, month: number) {
       let date = "",
         time = "",
         game = "",
-        tv = "",
         stadium = "",
         note = "";
 
@@ -78,19 +77,17 @@ export async function fetchMonthlySchedule(year: number, month: number) {
         currentDate = date;
         time = tds[1]?.textContent?.trim() || "";
         game = tds[2]?.textContent?.trim() || "";
-        tv = tds[5]?.textContent?.trim() || "";
         stadium = tds[7]?.textContent?.trim() || "";
         note = tds[8]?.textContent?.trim() || "";
       } else {
         date = currentDate;
         time = tds[0]?.textContent?.trim() || "";
         game = tds[1]?.textContent?.trim() || "";
-        tv = tds[4]?.textContent?.trim() || "";
         stadium = tds[6]?.textContent?.trim() || "";
         note = tds[7]?.textContent?.trim() || "";
       }
 
-      results.push({ date, time, game, tv, stadium, note });
+      results.push({ date, time, game, stadium, note });
     }
 
     return results;
@@ -98,7 +95,7 @@ export async function fetchMonthlySchedule(year: number, month: number) {
 
   await browser.close();
 
-  const finalData = rawData.map(({ date, time, game, tv, stadium, note }) => {
+  const finalData = rawData.map(({ date, time, game, stadium, note }) => {
     const parsed = parseGame(game);
     date = convertToISODate(month, date);
 
@@ -109,7 +106,6 @@ export async function fetchMonthlySchedule(year: number, month: number) {
       homeScore: parsed?.homeScore || "",
       awayTeam: parsed?.awayTeam || "",
       awayScore: parsed?.awayScore || "",
-      tv,
       stadium,
       note,
     };
