@@ -26,11 +26,13 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.842.0",
     "@prisma/client": "^6.11.0",
     "axios": "^1.10.0",
     "cheerio": "^1.1.0",
     "dotenv": "^17.0.0",
     "playwright": "^1.53.1",
-    "prisma": "^6.11.0"
+    "prisma": "^6.11.0",
+    "uuid": "^11.1.0"
   }
 }

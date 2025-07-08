@@ -3,6 +3,7 @@ import { fetchTeamRanking } from "./rankings/teamRankingCrawler";
 import { fetchMonthlySchedule } from "./schedules/fetchYearlySchedule";
 import { saveToDatabase } from "./prisma/saveMainDate";
 import { getUnifiedTopStats } from "./team/weeklyTopPlayerCrawler";
+import { getBreakingNews } from "./news/getBreakingNews";
 
 (async () => {
   const year = 2025;
@@ -10,6 +11,7 @@ import { getUnifiedTopStats } from "./team/weeklyTopPlayerCrawler";
   const teamresult = await fetchTeamRanking();
   const playerresult = await fetchTopPlayers();
   const teamTopPlayers = await getUnifiedTopStats();
+  const newsItems = await getBreakingNews();
   console.table(teamTopPlayers);
   console.table(teamresult);
   console.table(playerresult);
@@ -22,6 +24,7 @@ import { getUnifiedTopStats } from "./team/weeklyTopPlayerCrawler";
   }
 
   console.table(allSchedules.slice(0, 10));
+  console.table(newsItems);
 
   await saveToDatabase({
     schedules: allSchedules,
