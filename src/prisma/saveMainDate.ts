@@ -7,6 +7,7 @@ export async function saveToDatabase({
   teamRanks,
   playerStats,
   teamTopPlayers,
+  newsItems,
 }: {
   schedules: any[];
   teamRanks: any[];
@@ -17,6 +18,13 @@ export async function saveToDatabase({
     type: "타자" | "투수";
     game: number;
     value: number;
+  }[];
+  newsItems?: {
+    title: string;
+    summary: string;
+    date: string;
+    url: string;
+    thumbnail: string;
   }[];
 }) {
   for (const s of schedules) {
@@ -77,5 +85,19 @@ export async function saveToDatabase({
       },
       create: p,
     });
+  }
+  if (newsItems && newsItems.length > 0) {
+    for (const news of newsItems) {
+      await prisma.news.upsert({
+        where: { url: news.url },
+        update: {
+          title: news.title,
+          summary: news.summary,
+          date: news.date,
+          thumbnail: news.thumbnail,
+        },
+        create: news,
+      });
+    }
   }
 }
