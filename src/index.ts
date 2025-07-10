@@ -12,6 +12,7 @@ import { getBreakingNews } from "./news/getBreakingNews";
   const playerresult = await fetchTopPlayers();
   const teamTopPlayers = await getUnifiedTopStats();
   const newsItems = await getBreakingNews();
+
   console.table(teamTopPlayers);
   console.table(teamresult);
   console.table(playerresult);
@@ -31,5 +32,6 @@ import { getBreakingNews } from "./news/getBreakingNews";
     teamRanks: teamresult,
     playerStats: playerresult,
     teamTopPlayers: teamTopPlayers,
+    newsItems: newsItems,
   });
 })();
