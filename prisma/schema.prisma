@@ -136,3 +136,14 @@ model TeamTopPlayer {
 
   @@unique([team, name, type])
 }
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  summary   String
+  date      String  
+  url       String   @unique
+  thumbnail String
+  createdAt DateTime @default(now())
+}
+
